@@ -16,7 +16,8 @@ async function getParties() {
   try {
     const response = await fetch(API_URL);
     const json = await response.json();
-    state.parties = Array.isArray(json) ? json : [];
+    // state.parties = Array.isArray(json) ? json : [];
+    state.parties = json.data;
   } catch (error) {
     alert(error);
   }
@@ -28,7 +29,7 @@ function renderParties() {
     partiesList.innerHTML = `<li>No Parties Found!</li>`;
     return;
   }
-  partiesList.innerHTML = ''; // clears the list
+  // partiesList.innerHTML = ''; // clears the list
   state.parties.forEach((party) => {
     const partyRow = document.createElement('li');
     partyRow.classList.add('party');
@@ -43,7 +44,9 @@ function renderParties() {
     `;
     partyRow.appendChild(createDeleteButton(party));
     partiesList.appendChild(partyRow);
+    return partyRow;
   });
+  partiesList.replaceChildren(...partiesList);
 }
 
 // function to create a delete button
@@ -64,6 +67,7 @@ function createDeleteButton(party) {
 async function render() {
   await getParties();
   renderParties();
+  await updatePartyList();
 }
 render();
 
